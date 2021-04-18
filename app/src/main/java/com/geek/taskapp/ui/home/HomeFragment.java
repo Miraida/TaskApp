@@ -14,15 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.geek.taskapp.R;
 import com.geek.taskapp.adapter.ItemClickListener;
-
-import java.util.ArrayList;
-
 import com.geek.taskapp.adapter.TaskAdapter;
 
 public class HomeFragment extends Fragment implements ItemClickListener {
     TaskAdapter adapter;
-    Bundle bundle = new Bundle();
-    private ArrayList<String> list = new ArrayList<>();
     private int position;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -72,6 +67,7 @@ public class HomeFragment extends Fragment implements ItemClickListener {
     @Override
     public void onItemClick(int position, String title) {
         this.position = position;
+        Bundle bundle = new Bundle();
         bundle.putString("TEXT_KEY", title);
         Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.formFragment, bundle);
     }
