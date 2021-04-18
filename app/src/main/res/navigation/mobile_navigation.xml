@@ -25,10 +25,10 @@
     <fragment
         android:id="@+id/formFragment"
         android:name="com.geek.taskapp.ui.FormFragment"
-        android:label="fragment_form"
+        android:label="@string/form_fragment"
         tools:layout="@layout/fragment_form" />
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/profile_fragment"
         android:name="com.geek.taskapp.ui.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile"/>
