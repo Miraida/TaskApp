@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:gravity="center"
     tools:context=".ui.FormFragment">
 
     <EditText
@@ -23,7 +24,5 @@
         android:text="add"
         android:fontFamily="serif"
        android:id="@+id/add_button"/>
-
-
 
 </LinearLayout>
