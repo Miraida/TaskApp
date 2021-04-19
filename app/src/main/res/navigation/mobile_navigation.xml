@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.geek.taskapp.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_formFragment"
+            app:destination="@id/formFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -32,4 +36,9 @@
         android:name="com.geek.taskapp.ui.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile"/>
+    <fragment
+        android:id="@+id/boardFragment"
+        android:name="com.geek.taskapp.ui.board.BoardFragment"
+        android:label="fragment_board"
+        tools:layout="@layout/fragment_board" />
 </navigation>

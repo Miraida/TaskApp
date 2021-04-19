@@ -1,7 +1,6 @@
 package com.geek.taskapp.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,21 +8,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.NavController;
+
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.geek.taskapp.R;
 import com.geek.taskapp.adapter.ItemClickListener;
+import com.geek.taskapp.constants.Keys;
 import com.geek.taskapp.adapter.TaskAdapter;
+import com.geek.taskapp.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment implements ItemClickListener {
     TaskAdapter adapter;
     private int position;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
+    private FragmentHomeBinding binding;
+    private NavController navController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,44 +30,44 @@ public class HomeFragment extends Fragment implements ItemClickListener {
         adapter = new TaskAdapter();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.fab).setOnClickListener(v -> openForm());
-        initList(view);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        initList();
         checkFragmentResult();
-
+        return binding.getRoot();
     }
-
     private void checkFragmentResult() {
-        getParentFragmentManager().setFragmentResultListener("rk_task", getViewLifecycleOwner(), (requestKey, result) -> {
-            boolean isChanged = result.getBoolean("isChanged");
-            String title = result.getString("TITLE_TEXT");
+        getParentFragmentManager().setFragmentResultListener(Keys.REQUEST_KEY_HOME_FRAGMENT, getViewLifecycleOwner(), (requestKey, result) -> {
+            boolean isChanged = result.getBoolean(Keys.IS_CHANGED_BOOLEAN);
+            String title = result.getString(Keys.TITLE_TEXT_KEY);
             if (isChanged) {
-                Log.e("TAG", "checkFragmentResult true: " + title);
                 adapter.setItem(title, position);
             } else {
-                Log.e("TAG", "checkFragmentResult false: " + title);
                 adapter.addItem(title);
             }
         });
     }
 
-    private void initList(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(adapter);
+    private void initList() {
+        binding.recyclerView.setAdapter(adapter);
         adapter.setOnClickListener(this);
+        navController = NavHostFragment.findNavController(this);
+        binding.fab.setOnClickListener(v -> openForm(false));
     }
 
-    private void openForm() {
-        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.formFragment);
+    private void openForm(boolean isDataUpdate) {
+        if (isDataUpdate)
+            navController.navigate(R.id.action_navigation_home_to_formFragment, bundle);
+        else navController.navigate(R.id.action_navigation_home_to_formFragment);
     }
+
+    Bundle bundle = new Bundle();
 
     @Override
     public void onItemClick(int position, String title) {
         this.position = position;
-        Bundle bundle = new Bundle();
-        bundle.putString("TEXT_KEY", title);
-        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.formFragment, bundle);
+        bundle.putString(Keys.TITLE_TEXT_KEY, title);
+        openForm(true);
     }
 }

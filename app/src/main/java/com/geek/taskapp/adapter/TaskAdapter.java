@@ -5,26 +5,22 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.geek.taskapp.R;
+import com.geek.taskapp.databinding.ItemTaskBinding;
 
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    ArrayList<String> list;
-    ItemClickListener listener;
-
-    public TaskAdapter() {
-        this.list = new ArrayList<>();
-    }
+    private final ArrayList<String> list = new ArrayList<>();
+    private ItemClickListener listener;
+    private ItemTaskBinding binding;
 
     public void addItem(String title) {
         list.add(title);
-        notifyItemInserted(list.size() - 1);
+        notifyItemInserted(list.size()-1);
     }
 
     public void setItem(String title, int position) {
@@ -35,7 +31,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TaskViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task, parent, false));
+        return new TaskViewHolder(ItemTaskBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -49,33 +45,33 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final TextView textTitle_tv;
         private String title;
 
-        public TaskViewHolder(@NonNull View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(v -> {
+        public TaskViewHolder(@NonNull ItemTaskBinding itemView) {
+            super(itemView.getRoot());
+            binding = itemView;
+            binding.getRoot().setOnClickListener(this);
+            binding.getRoot().setOnLongClickListener(v -> {
                 showAlertDialog();
                 return true;
             });
-            textTitle_tv = itemView.findViewById(R.id.item_title_textView);
         }
 
 
         public void onBind(String title) {
             this.title = title;
             if (getAdapterPosition() % 2 == 0) {
-                itemView.findViewById(R.id.colorLayout).setBackgroundColor(Color.WHITE);
+                binding.colorLayout.setBackgroundColor(Color.WHITE);
             }
-            textTitle_tv.setText(title);
+            binding.itemTitleTextView.setText(title);
         }
 
         private void showAlertDialog() {
             AlertDialog alertDialog = new AlertDialog.Builder(itemView.getContext()).setMessage("Вы хотите удалить?")
                     .setPositiveButton("Да", (dialog, which) -> {
                         list.remove(getAdapterPosition());
-                        notifyDataSetChanged();})
+                        notifyItemRemoved(getAdapterPosition());
+                    })
                     .setNegativeButton("Нет", null)
                     .create();
             alertDialog.show();
