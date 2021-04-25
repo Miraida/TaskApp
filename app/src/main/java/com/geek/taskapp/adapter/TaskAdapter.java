@@ -10,24 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.geek.taskapp.databinding.ItemTaskBinding;
+import com.geek.taskapp.models.Task;
 
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private final ArrayList<String> list = new ArrayList<>();
+    private final ArrayList<Task> list;
     private ItemClickListener listener;
     private ItemTaskBinding binding;
 
-    public void addItem(String title) {
-        list.add(title);
-        notifyItemInserted(list.size()-1);
+    public TaskAdapter(ArrayList<Task> list) {
+        this.list = list;
     }
-
-    public void setItem(String title, int position) {
-        list.set(position, title);
-        notifyItemChanged(position);
-    }
-
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -45,7 +39,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private String title;
 
         public TaskViewHolder(@NonNull ItemTaskBinding itemView) {
             super(itemView.getRoot());
@@ -56,14 +49,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 return true;
             });
         }
-
-
-        public void onBind(String title) {
-            this.title = title;
+        public void onBind(Task model) {
             if (getAdapterPosition() % 2 == 0) {
                 binding.colorLayout.setBackgroundColor(Color.WHITE);
             }
-            binding.itemTitleTextView.setText(title);
+            binding.itemTitleTextView.setText(model.getTitle());
         }
 
         private void showAlertDialog() {
@@ -80,11 +70,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         @Override
         public void onClick(View v) {
             if (listener != null) {
-                listener.onItemClick(getAdapterPosition(), title);
+                listener.onItemClick(getAdapterPosition());
             }
         }
-    }
 
+    }
     public void setOnClickListener(ItemClickListener listener) {
         this.listener = listener;
     }

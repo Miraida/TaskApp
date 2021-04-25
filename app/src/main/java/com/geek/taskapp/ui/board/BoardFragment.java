@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.geek.taskapp.Prefs;
 import com.geek.taskapp.R;
 import com.geek.taskapp.adapter.BoardAdapter;
 import com.geek.taskapp.databinding.FragmentBoardBinding;
@@ -52,10 +53,13 @@ public class BoardFragment extends Fragment {
               requireActivity().finish();
             }
         });
+
         return binding.getRoot();
     }
 
     private void close() {
+        Prefs prefs = new Prefs(requireContext());
+        prefs.saveBoardState();
         Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigateUp();
     }
 }

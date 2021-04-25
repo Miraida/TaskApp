@@ -3,11 +3,8 @@ package com.geek.taskapp;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -25,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initNav();
-        navController.navigate(R.id.boardFragment);
+        Prefs prefs = new Prefs(this);
+        if (!prefs.isBoardShown())
+            navController.navigate(R.id.boardFragment);
     }
 
     private void initNav() {
@@ -41,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
                     destination.getId() == R.id.navigation_notifications || destination.getId() == R.id.profile_fragment)
                 navView.setVisibility(View.VISIBLE);
             else navView.setVisibility(View.GONE);
-            if (destination.getId() == R.id.boardFragment) Objects.requireNonNull(getSupportActionBar()).hide();
+            if (destination.getId() == R.id.boardFragment)
+                Objects.requireNonNull(getSupportActionBar()).hide();
             else Objects.requireNonNull(getSupportActionBar()).show();
         });
     }
@@ -50,4 +50,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        Prefs prefs = new Prefs(this);
+//        prefs.saveProfileText("");
+//    }
 }

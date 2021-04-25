@@ -17,17 +17,21 @@ import com.geek.taskapp.adapter.ItemClickListener;
 import com.geek.taskapp.constants.Keys;
 import com.geek.taskapp.adapter.TaskAdapter;
 import com.geek.taskapp.databinding.FragmentHomeBinding;
+import com.geek.taskapp.models.Task;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment implements ItemClickListener {
     TaskAdapter adapter;
     private int position;
+    ArrayList<Task> list = new ArrayList<>();
     private FragmentHomeBinding binding;
     private NavController navController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new TaskAdapter();
+        adapter = new TaskAdapter(list);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,14 +41,17 @@ public class HomeFragment extends Fragment implements ItemClickListener {
         checkFragmentResult();
         return binding.getRoot();
     }
+
     private void checkFragmentResult() {
         getParentFragmentManager().setFragmentResultListener(Keys.REQUEST_KEY_HOME_FRAGMENT, getViewLifecycleOwner(), (requestKey, result) -> {
             boolean isChanged = result.getBoolean(Keys.IS_CHANGED_BOOLEAN);
-            String title = result.getString(Keys.TITLE_TEXT_KEY);
+            Task model = (Task) result.getSerializable(Keys.TASK_MODEL_KEY);
             if (isChanged) {
-                adapter.setItem(title, position);
+                list.set(position, model);
+                adapter.notifyItemChanged(position);
             } else {
-                adapter.addItem(title);
+                list.add(model);
+                adapter.notifyItemInserted(list.size() - 1);
             }
         });
     }
@@ -65,9 +72,10 @@ public class HomeFragment extends Fragment implements ItemClickListener {
     Bundle bundle = new Bundle();
 
     @Override
-    public void onItemClick(int position, String title) {
+    public void onItemClick(int position) {
         this.position = position;
-        bundle.putString(Keys.TITLE_TEXT_KEY, title);
+        Task taskModel = list.get(position);
+        bundle.putSerializable(Keys.TASK_MODEL_KEY, taskModel);
         openForm(true);
     }
 }

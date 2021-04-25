@@ -11,13 +11,13 @@ import androidx.navigation.Navigation;
 import com.geek.taskapp.R;
 import com.geek.taskapp.constants.Keys;
 import com.geek.taskapp.databinding.FragmentFormBinding;
+import com.geek.taskapp.models.Task;
 
 import org.jetbrains.annotations.NotNull;
 
 public class FormFragment extends Fragment {
     private boolean isChanged = false;
     private FragmentFormBinding binding;
-
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -29,7 +29,8 @@ public class FormFragment extends Fragment {
 
     private void checkData() {
         if (getArguments() != null) {
-            binding.editText.setText(getArguments().getString(Keys.TITLE_TEXT_KEY));
+         Task model2 = (Task) getArguments().getSerializable(Keys.TASK_MODEL_KEY);
+            binding.editText.setText(model2.getTitle());
             isChanged = true;
         }
     }
@@ -40,9 +41,11 @@ public class FormFragment extends Fragment {
     }
 
     private Bundle getBundle() {
-        String text = binding.editText.getText().toString();
+        String title = binding.editText.getText().toString();
+        Task model = new Task();
+        model.setTitle(title);
         Bundle bundle = new Bundle();
-        bundle.putString(Keys.TITLE_TEXT_KEY, text);
+        bundle.putSerializable(Keys.TASK_MODEL_KEY, model);
         bundle.putBoolean(Keys.IS_CHANGED_BOOLEAN, isChanged);
         return bundle;
     }
