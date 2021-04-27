@@ -2,15 +2,12 @@ package com.geek.taskapp;
 
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,15 +43,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        Prefs prefs = new Prefs(this);
-//        prefs.saveProfileText("");
-//    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Prefs prefs = new Prefs(this);
+        prefs.saveProfileText("");
+    }
 }

@@ -1,7 +1,10 @@
 package com.geek.taskapp.adapter;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +12,33 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.geek.taskapp.App;
 import com.geek.taskapp.databinding.ItemTaskBinding;
 import com.geek.taskapp.models.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private final ArrayList<Task> list;
+    private List<Task> list;
     private ItemClickListener listener;
     private ItemTaskBinding binding;
+    private final Context context;
 
-    public TaskAdapter(ArrayList<Task> list) {
-        this.list = list;
+    public TaskAdapter(Context context) {
+        this.context = context;
+        list = new ArrayList<>();
     }
+
+    public void addList(List<Task> list) {
+        this.list.addAll(list);
+    }
+
+    public void updateList(List<Task> list) {
+        this.list = list;
+        notifyItemRangeChanged(0, list.size());
+    }
+
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,16 +66,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 return true;
             });
         }
+
         public void onBind(Task model) {
-            if (getAdapterPosition() % 2 == 0) {
-                binding.colorLayout.setBackgroundColor(Color.WHITE);
-            }
+           // binding.idTextView.setText(String.valueOf(model.getId()));
             binding.itemTitleTextView.setText(model.getTitle());
+            binding.itemCreatedTextView.setText(DateUtils.formatDateTime
+                    (context, model.getCreatedAt(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
+                            | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR));
         }
 
         private void showAlertDialog() {
             AlertDialog alertDialog = new AlertDialog.Builder(itemView.getContext()).setMessage("Вы хотите удалить?")
                     .setPositiveButton("Да", (dialog, which) -> {
+                        App.appDataBase.taskDao().delete(list.get(getAdapterPosition()).getId());
                         list.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                     })
@@ -73,8 +93,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 listener.onItemClick(getAdapterPosition());
             }
         }
-
     }
+
     public void setOnClickListener(ItemClickListener listener) {
         this.listener = listener;
     }

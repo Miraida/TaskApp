@@ -4,16 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/colorLayout"
-    android:background="#FFD180"
     android:padding="16dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/id_textView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/item_title_textView"
+        app:layout_constraintTop_toTopOf="@id/item_title_textView"
+        app:layout_constraintBottom_toBottomOf="@id/item_title_textView"/>
 
     <TextView
         android:id="@+id/item_title_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="serif"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/id_textView"
+        app:layout_constraintEnd_toStartOf="@id/item_created_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:id="@+id/item_created_textView"
+        app:layout_constraintStart_toEndOf="@id/item_title_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/item_title_textView"
+        app:layout_constraintBottom_toBottomOf="@id/item_title_textView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

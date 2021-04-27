@@ -40,7 +40,6 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
